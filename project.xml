@@ -7,6 +7,10 @@
 		package="com.yoshman29.codenameengine"
 		version="0.1.0-legacy" company="Yoshman29" />
 
+	<section if="mobile">
+		<app title="Codename Engine" />
+	</section>
+
 	<!--
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!
 	-->
@@ -87,19 +91,28 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	<icon path="art/icon16.png" size='16'/>
-	<icon path="art/icon32.png" size='24'/>
-	<icon path="art/icon32.png" size='32'/>
-	<icon path="art/icon64.png" size='40'/>
-	<icon path="art/icon64.png" size='48'/>
-	<icon path="art/icon64.png" size='64'/>
-	<icon path="art/iconOG.png" size='96' />
-	<icon path="art/iconOG.png" size='128' />
-	<icon path="art/iconOG.png" size='196' />
-	<icon path="art/iconOG.png" size='256' />
-	<icon path="art/iconOG.png" size='512' />
-	<icon path="art/iconOG.png" size='768' />
-	<icon path="art/iconOG.png" size='1024' />
+
+	<section if="mobile">
+		<icon path="art/iconMobile.png" size="16"/>
+		<icon path="art/iconMobile.png" size="32"/>
+		<icon path="art/iconMobile.png" size="64"/>
+		<icon path="art/iconMobile.png"/>
+	</section>
+	<section unless="mobile">
+		<icon path="art/icon16.png" size='16'/>
+		<icon path="art/icon32.png" size='24'/>
+		<icon path="art/icon32.png" size='32'/>
+		<icon path="art/icon64.png" size='40'/>
+		<icon path="art/icon64.png" size='48'/>
+		<icon path="art/icon64.png" size='64'/>
+		<icon path="art/iconOG.png" size='96' />
+		<icon path="art/iconOG.png" size='128' />
+		<icon path="art/iconOG.png" size='196' />
+		<icon path="art/iconOG.png" size='256' />
+		<icon path="art/iconOG.png" size='512' />
+		<icon path="art/iconOG.png" size='768' />
+		<icon path="art/iconOG.png" size='1024' />
+	</section>
 
 
 	<!-- _________________________________ Engine Settings _______________________________ -->
@@ -217,4 +230,11 @@
 	<haxedef name="HXCPP_CATCH_SEGV" />
 
 	<haxedef name="hscriptPos" /> <!-- for logging -->
+
+	<!-- Mobile Flags -->
+	<haxedef name="FILE_SHARING" if="MOD_SUPPORT"/> <!-- Allows mobile to access the app files for mods and addons -->
+
+	<!-- iOS Compiling Flags -->
+	<config:ios device="universal" /> <!-- supported device types; other options: "iphone", "ipad" -->
+	<config:ios deployment="12.0" /> <!-- minimum iOS version to target -->
 </project>

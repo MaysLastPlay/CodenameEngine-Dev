@@ -1,13 +1,13 @@
 
-name: Linux Build
+name: iOS Build
 on:
   push:
   workflow_dispatch:
 jobs:
   build:
-    name: Linux Build
+    name: iOS Build
     permissions: write-all
-    runs-on: ubuntu-latest
+    runs-on: macos-13
     steps:
       - name: Pulling the new commit
         uses: actions/checkout@v3
@@ -25,19 +25,14 @@ jobs:
         uses: actions/cache@v3
         with:
           # not caching the bin folder to prevent asset duplication and stuff like that
-          key: cache-build-linux-${{ steps.get_hash.outputs.hash }}
+          key: cache-build-ios-${{ steps.get_hash.outputs.hash }}
           path: |
             .haxelib/
             ~/.hxcpp/
-            export/release/linux/haxe/
-            export/release/linux/obj/
+            export/release/ios/CodenameEngine/haxe/
+            export/release/ios/CodenameEngine/obj/
           restore-keys: |
-            cache-build-linux-${{ steps.get_hash.outputs.hash }}
-      - name: Installing LibVLC
-        run: |
-          sudo apt-get update
-          sudo apt-get install libvlc-dev libvlccore-dev
-          sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev libmbedtls-dev libpng-dev libturbojpeg-dev libuv1-dev libvorbis-dev
+            cache-build-ios-${{ steps.get_hash.outputs.hash }}
       - name: Enable HXCPP compile cache
         run: |
           echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
@@ -57,25 +52,22 @@ jobs:
         run: |
           haxelib dev lime .haxelib/lime/git
           haxelib run lime setup -alias -y -nocffi -eval
-          haxelib run lime rebuild linux -release -nocolor -eval
-          cd .haxelib/lime/git/tools
-          haxe tools.hxml
-          cd ../../../..
+          haxelib run lime rebuild ios -release -nocolor -eval
+          lime rebuild tools -release -nocolor -eval
       - name: Building the game
         run: |
-          haxelib run lime build linux
-      - name: Tar files
-        run: tar -zcvf CodenameEngine.tar.gz -C export/release/linux/bin .
+          haxelib run lime build ios -nosign
+      - name: Making app from built payload
+        run: |
+          cd export/release/ios/build/Release-iphoneos
+          mkdir Payload
+          mv *.app Payload
+          zip -r CodenameEngine.ipa Payload
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v4
         with:
           name: Codename Engine
-          path: CodenameEngine.tar.gz
-      # - name: Uploading artifact (executable)
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: Update-Linux
-      #     path: export/release/linux/bin/CodenameEngine
+          path: export/release/ios/build/Release-iphoneos/*.ipa
       - name: Clearing already existing cache
         uses: actions/github-script@v6
         env:
@@ -88,7 +80,7 @@ jobs:
               repo: context.repo.repo,
             });
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-linux-" + hash) {
+              if (cache.key == "cache-build-ios-" + hash) {
                 console.log('Clearing ' + cache.key + '...');
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -102,11 +94,11 @@ jobs:
         uses: actions/cache@v3
         with:
           # caching again since for some reason it doesnt work with the first post cache shit
-          key: cache-build-linux-${{ steps.get_hash.outputs.hash }}
+          key: cache-build-ios-${{ steps.get_hash.outputs.hash }}
           path: |
             .haxelib/
             ~/.hxcpp/
-            export/release/linux/haxe/
-            export/release/linux/obj/
+            export/release/ios/CodenameEngine/haxe/
+            export/release/ios/CodenameEngine/obj/
           restore-keys: |
-            cache-build-linux-${{ steps.get_hash.outputs.hash }}
+            cache-build-ios-${{ steps.get_hash.outputs.hash }}
