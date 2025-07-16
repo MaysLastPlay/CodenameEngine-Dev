@@ -607,7 +607,9 @@ class System
 		#if (sys && !macro)
 		funkin.backend.utils.NativeAPI.registerAsDPICompatible();
 		funkin.backend.system.CommandLineHandler.parseCommandLine(Sys.args());
+		#if !mobile
 		funkin.backend.system.Main.fixWorkingDirectory();
+		#end
 		#end
 
 		if (__applicationEntryPoint == null)
