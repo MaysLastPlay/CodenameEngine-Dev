@@ -7,10 +7,6 @@
 		package="com.yoshman29.codenameengine"
 		version="0.1.0-legacy" company="Yoshman29" />
 
-	<section if="mobile">
-		<app title="Codename Engine" />
-	</section>
-
 	<!--
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!
 	-->
@@ -232,7 +228,7 @@
 	<haxedef name="hscriptPos" /> <!-- for logging -->
 
 	<!-- Mobile Flags -->
-	<haxedef name="FILE_SHARING" if="MOD_SUPPORT"/> <!-- Allows mobile to access the app files for mods and addons -->
+	<haxedef name="FILE_SHARING" /> <!-- Allows mobile to access the app files for mods and addons -->
 
 	<!-- iOS Compiling Flags -->
 	<config:ios device="universal" /> <!-- supported device types; other options: "iphone", "ipad" -->
